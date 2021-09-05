@@ -22,6 +22,7 @@ namespace EventShuffle.FunctionApp.V1.Handlers
 
         public async Task<IActionResult> CreateVoteAsync(long eventId, CreateVoteInputDto inputDto)
         {
+            // This could be moved to UnitOfWork/Repository as soon as we have lot's of similar logic in many places
             var eventModel = await _dbContext.Events
                 .Include(x => x.Dates)
                 .FirstOrDefaultAsync(x => x.Id == eventId);

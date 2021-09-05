@@ -30,6 +30,7 @@ namespace EventShuffle.FunctionApp.V1.Handlers
                 return new BadRequestObjectResult(error);
             }
 
+            // This could be moved to UnitOfWork/Repository as soon as we have lot's of similar logic in many places
             // ToLowerInvariant() is not supported by SQL, so ToLower() is the way to go here
             var sameName = await _dbContext.Events.FirstOrDefaultAsync(x => x.Name.ToLower() == inputDto.Name.ToLower());
             if (sameName != null)
