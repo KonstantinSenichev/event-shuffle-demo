@@ -1,23 +1,24 @@
-﻿using System;
-using EventShuffle.FunctionApp.V1.DTOs;
+﻿using EventShuffle.FunctionApp.V1.DTOs;
 using EventShuffle.Persistence;
 using EventShuffle.Persistence.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentValidation;
 
 namespace EventShuffle.FunctionApp.V1.Handlers
 {
     public class CreateEventHandler
     {
         private readonly EventShuffleDbContext _dbContext;
+        private readonly EventShuffleRepository _repository;
 
-        public CreateEventHandler(EventShuffleDbContext dbContext)
+        public CreateEventHandler(EventShuffleDbContext dbContext, EventShuffleRepository repository)
         {
             _dbContext = dbContext;
+            _repository = repository;
         }
 
         public async Task<IActionResult> CreateEventAsync(CreateEventInputDto inputDto)
@@ -30,9 +31,7 @@ namespace EventShuffle.FunctionApp.V1.Handlers
                 return new BadRequestObjectResult(error);
             }
 
-            // This could be moved to UnitOfWork/Repository as soon as we have lot's of similar logic in many places
-            // ToLowerInvariant() is not supported by SQL, so ToLower() is the way to go here
-            var sameName = await _dbContext.Events.FirstOrDefaultAsync(x => x.Name.ToLower() == inputDto.Name.ToLower());
+            var sameName = await _repository.GetEventAsync(inputDto.Name);
             if (sameName != null)
             {
                 return new BadRequestObjectResult($"Event named '{sameName.Name}' already exists");

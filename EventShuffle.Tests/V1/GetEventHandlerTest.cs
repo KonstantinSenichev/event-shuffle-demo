@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EventShuffle.FunctionApp.V1;
 using EventShuffle.FunctionApp.V1.DTOs;
 using EventShuffle.FunctionApp.V1.Handlers;
+using EventShuffle.Persistence;
 using EventShuffle.Persistence.Models;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -18,7 +19,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new GetEventHandler(context);
+            var target = new GetEventHandler(new EventShuffleRepository(context));
 
             // Act
             var actual = await target.GetEventAsync(123);
@@ -33,7 +34,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new GetEventHandler(context);
+            var target = new GetEventHandler(new EventShuffleRepository(context));
 
             var existingEvent = new EventModel()
             {
@@ -58,7 +59,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new GetEventHandler(context);
+            var target = new GetEventHandler(new EventShuffleRepository(context));
 
             var existingEvents = new List<EventModel>();
             for (var i = 1; i <= 10; i++)
@@ -103,7 +104,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new GetEventHandler(context);
+            var target = new GetEventHandler(new EventShuffleRepository(context));
 
             var date1 = (await context.EventDates.AddAsync(new EventDateModel() { Date = new DateTime(2021, 9, 1) })).Entity;
             var date2 = (await context.EventDates.AddAsync(new EventDateModel() { Date = new DateTime(2021, 9, 2) })).Entity;

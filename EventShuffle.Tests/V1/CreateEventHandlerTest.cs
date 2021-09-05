@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventShuffle.Persistence;
 using Xunit;
 
 namespace EventShuffle.Tests.V1
@@ -17,7 +18,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new CreateEventHandler(context);
+            var target = new CreateEventHandler(context, new EventShuffleRepository(context));
 
             // Act
             var e = new CreateEventInputDto() { Name = string.Empty, Dates = new List<DateTime>() { DateTime.Now } };
@@ -33,7 +34,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new CreateEventHandler(context);
+            var target = new CreateEventHandler(context, new EventShuffleRepository(context));
 
             // Act
             var e = new CreateEventInputDto() { Name = "TestEvent", Dates = new List<DateTime>() };
@@ -49,7 +50,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new CreateEventHandler(context);
+            var target = new CreateEventHandler(context, new EventShuffleRepository(context));
 
             var date1 = DateTime.Now;
             var date2 = date1.AddDays(1);
@@ -68,7 +69,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new CreateEventHandler(context);
+            var target = new CreateEventHandler(context, new EventShuffleRepository(context));
 
             var existingEvent = new EventModel()
             {
@@ -93,7 +94,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new CreateEventHandler(context);
+            var target = new CreateEventHandler(context, new EventShuffleRepository(context));
 
             // Act
             var e = new CreateEventInputDto() { Name = "TestEvent", Dates = new List<DateTime>() { new DateTime(2021, 9, 20), new DateTime(2021, 9, 21) } };

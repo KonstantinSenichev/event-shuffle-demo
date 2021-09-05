@@ -27,6 +27,8 @@ namespace EventShuffle.FunctionApp
             builder.Services.AddScoped<GetEventHandler>();
             builder.Services.AddScoped<GetEventsHandler>();
             builder.Services.AddScoped<GetEventResultsHandler>();
+
+            builder.Services.AddScoped<EventShuffleRepository>();
         }
     }
 

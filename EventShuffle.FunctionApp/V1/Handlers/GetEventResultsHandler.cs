@@ -1,41 +1,33 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using EventShuffle.FunctionApp.V1.DTOs;
+﻿using EventShuffle.FunctionApp.V1.DTOs;
 using EventShuffle.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventShuffle.FunctionApp.V1.Handlers
 {
     public class GetEventResultsHandler
     {
-        private readonly EventShuffleDbContext _dbContext;
+        private readonly EventShuffleRepository _repository;
 
-        public GetEventResultsHandler(EventShuffleDbContext dbContext)
+        public GetEventResultsHandler(EventShuffleRepository repository)
         {
-            _dbContext = dbContext;
+            _repository = repository;
         }
 
         public async Task<IActionResult> GetEventResultsAsync(long id)
         {
-            // This could be moved to UnitOfWork/Repository as soon as we have lot's of similar logic in many places
-            var eventModel = await _dbContext.Events
-                .Include(x => x.Dates)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            var eventModel = await _repository.GetEventAsync(id);
             if (eventModel is null)
             {
                 return new NotFoundObjectResult($"Event with ID '{id}' not found");
             }
 
-            var eventVotes = _dbContext.Votes
-                .Include(x => x.EventDate)
-                .Include(x => x.User)
-                .Where(x => x.EventId == id)
-                .OrderBy(x => x.EventDate.Date);
+            var eventVotes = await _repository.GetVotesAsync(id);
 
-            var allVotedUsers = await eventVotes.Select(x => x.User.Id).Distinct().CountAsync();
+            var allVotedUsers = eventVotes.Select(x => x.User.Id).Distinct().Count();
 
-            var result = GetEventResultsDto.From(eventModel, await eventVotes.ToListAsync(), allVotedUsers);
+            var result = GetEventResultsDto.From(eventModel, eventVotes, allVotedUsers);
             return new OkObjectResult(result);
         }
     }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EventShuffle.Persistence;
 using Xunit;
 
 namespace EventShuffle.Tests.V1
@@ -18,7 +19,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new GetEventResultsHandler(context);
+            var target = new GetEventResultsHandler(new EventShuffleRepository(context));
 
             // Act
             var actual = await target.GetEventResultsAsync(123);
@@ -33,7 +34,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new GetEventResultsHandler(context);
+            var target = new GetEventResultsHandler(new EventShuffleRepository(context));
 
             var date1 = new DateTime(2021, 9, 20);
             var date2 = new DateTime(2021, 9, 21);
@@ -66,7 +67,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new GetEventResultsHandler(context);
+            var target = new GetEventResultsHandler(new EventShuffleRepository(context));
 
             var date1 = (await context.EventDates.AddAsync(new EventDateModel() { Date = new DateTime(2021, 9, 1) })).Entity;
             var date2 = (await context.EventDates.AddAsync(new EventDateModel() { Date = new DateTime(2021, 9, 2) })).Entity;
@@ -115,7 +116,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new GetEventResultsHandler(context);
+            var target = new GetEventResultsHandler(new EventShuffleRepository(context));
 
             var date1 = (await context.EventDates.AddAsync(new EventDateModel() { Date = new DateTime(2021, 9, 1) })).Entity;
             var date2 = (await context.EventDates.AddAsync(new EventDateModel() { Date = new DateTime(2021, 9, 2) })).Entity;
@@ -161,7 +162,7 @@ namespace EventShuffle.Tests.V1
         {
             // Arrange
             await using var context = InMemoryDbFactory.CreateDbContext();
-            var target = new GetEventResultsHandler(context);
+            var target = new GetEventResultsHandler(new EventShuffleRepository(context));
 
             var date1 = (await context.EventDates.AddAsync(new EventDateModel() { Date = new DateTime(2021, 9, 1) })).Entity;
             var date2 = (await context.EventDates.AddAsync(new EventDateModel() { Date = new DateTime(2021, 9, 2) })).Entity;
