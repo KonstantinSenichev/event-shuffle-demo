@@ -3,7 +3,6 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-    "DbConnectionString": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EventShuffleDb;Integrated Security=True;",
-    "DateFormatString": "yyyy-MM-dd"
+    "DbConnectionString": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EventShuffleDb;Integrated Security=True;"
   }
 }

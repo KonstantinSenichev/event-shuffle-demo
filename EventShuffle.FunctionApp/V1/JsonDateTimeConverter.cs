@@ -6,7 +6,7 @@ namespace EventShuffle.FunctionApp.V1
 {
     public class JsonDateTimeConverter : System.Text.Json.Serialization.JsonConverter<DateTime>
     {
-        private static readonly string DateFormatString = Environment.GetEnvironmentVariable("DateFormatString");
+        private static readonly string DateFormatString = "yyyy-MM-dd";
 
         public static string ToDateOnlyString(DateTime date)
         {

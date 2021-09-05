@@ -68,7 +68,7 @@ namespace EventShuffle.FunctionApp.V1
             var id = long.Parse((string)req.RouteValues["id"]);
             log.LogInformation($"GetEventResults '{id}' processing a request.");
 
-            var result = await _getEventResultsHandler.GetEventResultAsync(id);
+            var result = await _getEventResultsHandler.GetEventResultsAsync(id);
             return result;
         }
 

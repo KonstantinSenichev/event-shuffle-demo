@@ -16,7 +16,7 @@ namespace EventShuffle.FunctionApp.V1.Handlers
             _dbContext = dbContext;
         }
 
-        public async Task<IActionResult> GetEventResultAsync(long id)
+        public async Task<IActionResult> GetEventResultsAsync(long id)
         {
             var eventModel = await _dbContext.Events
                 .Include(x => x.Dates)
